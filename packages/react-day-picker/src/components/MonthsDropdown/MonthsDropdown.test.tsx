@@ -2,17 +2,17 @@ import React from 'react';
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { addMonths, differenceInMonths } from 'date-fns';
 import { DayPickerProps } from 'DayPicker';
 
 import { customRender } from 'test/render';
 import { freezeBeforeAll } from 'test/utils';
 
 import { MonthsDropdown, MonthsDropdownProps } from './MonthsDropdown';
+import dayjs from 'dayjs';
 
-const today = new Date(2020, 12, 22);
+const today = dayjs(new Date(2020, 12, 22));
 
-freezeBeforeAll(today);
+freezeBeforeAll(today.toDate());
 
 let root: HTMLDivElement;
 let options: HTMLCollectionOf<HTMLOptionElement> | undefined;
@@ -33,7 +33,7 @@ const props: MonthsDropdownProps = {
 
 describe('when fromDate and toDate are passed in', () => {
   beforeEach(() => {
-    setup(props, { fromDate: new Date(), toDate: addMonths(new Date(), 1) });
+    setup(props, { fromDate: dayjs(), toDate: dayjs().add(1, 'month') });
   });
   test('should render the dropdown element', () => {
     expect(root).toMatchSnapshot();
@@ -60,28 +60,26 @@ describe('when "toDate" is not set', () => {
 });
 
 describe('when "fromDate" and "toDate" are in the same year', () => {
-  const fromDate = new Date(2012, 0, 22);
-  const toDate = new Date(2012, 10, 22);
+  const fromDate = dayjs(new Date(2012, 0, 22));
+  const toDate = dayjs(new Date(2012, 10, 22));
   beforeEach(() => {
     setup(props, { fromDate, toDate });
   });
   test('should display the months included between the two dates', () => {
-    expect(options).toHaveLength(differenceInMonths(toDate, fromDate) + 1);
+    expect(options).toHaveLength(toDate.diff(fromDate, 'month') + 1);
   });
   test('the first month should be the fromDate month', () => {
-    expect(options?.[0]).toHaveValue(String(fromDate.getMonth()));
+    expect(options?.[0]).toHaveValue(String(fromDate.month()));
   });
   test('the last month should be the toMonth month', () => {
-    expect(options?.[options.length - 1]).toHaveValue(
-      String(toDate.getMonth())
-    );
+    expect(options?.[options.length - 1]).toHaveValue(String(toDate.month()));
   });
 });
 
 describe('when "fromDate" and "toDate" are not in the same year', () => {
-  const fromDate = new Date(2012, 0, 22);
-  const toDate = new Date(2015, 10, 22);
-  const displayMonth = new Date(2015, 7, 0);
+  const fromDate = dayjs(new Date(2012, 0, 22));
+  const toDate = dayjs(new Date(2015, 10, 22));
+  const displayMonth = dayjs(new Date(2015, 7, 0));
   beforeEach(() => {
     setup({ ...props, displayMonth }, { fromDate, toDate });
   });
@@ -95,7 +93,7 @@ describe('when "fromDate" and "toDate" are not in the same year', () => {
     expect(options?.[options.length - 1]).toHaveValue('11');
   });
   test('should select the displayed month', () => {
-    expect(select).toHaveValue(`${displayMonth.getMonth()}`);
+    expect(select).toHaveValue(`${displayMonth.month()}`);
   });
 
   describe('when the dropdown changes', () => {

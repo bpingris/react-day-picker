@@ -1,8 +1,9 @@
+import dayjs from 'dayjs';
 import React from 'react';
 
 /** Represents a function to format a date. */
 export type DateFormatter = (
-  date: Date,
+  date: dayjs.Dayjs,
   options?: { locale?: Locale }
 ) => React.ReactNode;
 

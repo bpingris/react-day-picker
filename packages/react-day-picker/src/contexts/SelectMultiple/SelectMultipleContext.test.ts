@@ -1,4 +1,4 @@
-import { addDays, addMonths } from 'date-fns';
+import dayjs from 'dayjs';
 import { DayPickerProps } from 'DayPicker';
 
 import { renderDayPickerHook } from 'test/render';
@@ -13,8 +13,8 @@ import {
   useSelectMultiple
 } from './SelectMultipleContext';
 
-const today = new Date(2021, 11, 8);
-freezeBeforeAll(today);
+const today = dayjs(new Date(2021, 11, 8));
+freezeBeforeAll(today.toDate());
 
 function renderHook(props?: Partial<DayPickerProps>) {
   return renderDayPickerHook<SelectMultipleContextValue>(
@@ -40,8 +40,8 @@ const initialProps: DayPickerMultipleProps = {
 };
 
 const selectedDay1 = today;
-const selectedDay2 = addDays(today, 1);
-const selectedDay3 = addDays(today, 4);
+const selectedDay2 = today.add(1, 'day');
+const selectedDay3 = today.add(4, 'day');
 
 describe('when days are selected', () => {
   const selected = [selectedDay1, selectedDay2, selectedDay3];
@@ -55,7 +55,7 @@ describe('when days are selected', () => {
     expect(result.current.selected).toStrictEqual(selected);
   });
   describe('when `onDayClick` is called with a not selected day', () => {
-    const clickedDay = addDays(selectedDay1, -1);
+    const clickedDay = selectedDay1.subtract(1, 'day');
     const activeModifiers = {};
     const event = {} as React.MouseEvent;
     beforeAll(() => {
@@ -129,11 +129,11 @@ describe('when the maximum number of days are selected', () => {
   test('the other days should be disabled', () => {
     const result = renderHook(dayPickerProps);
     const { disabled } = result.current.modifiers;
-    expect(isMatch(addMonths(selectedDay1, 1), disabled)).toBe(true);
-    expect(isMatch(addMonths(selectedDay2, 1), disabled)).toBe(true);
+    expect(isMatch(selectedDay1.add(1, 'month'), disabled)).toBe(true);
+    expect(isMatch(selectedDay2.add(1, 'month'), disabled)).toBe(true);
   });
   describe('when `onDayClick` is called', () => {
-    const clickedDay = addMonths(selectedDay1, 1);
+    const clickedDay = selectedDay1.add(1, 'month');
     const activeModifiers: ActiveModifiers = {};
     beforeAll(() => {
       const result = renderHook(dayPickerProps);

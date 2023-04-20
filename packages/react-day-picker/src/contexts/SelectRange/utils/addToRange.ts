@@ -1,4 +1,5 @@
 import { isAfter, isBefore, isSameDay } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { DateRange } from 'types/Matchers';
 
@@ -9,32 +10,32 @@ import { DateRange } from 'types/Matchers';
  * day is already present in the range.
  */
 export function addToRange(
-  day: Date,
+  day: dayjs.Dayjs,
   range?: DateRange
 ): DateRange | undefined {
   const { from, to } = range || {};
   if (!from) {
     return { from: day, to: undefined };
   }
-  if (!to && isSameDay(from, day)) {
+  if (!to && from.isSame(day, 'day')) {
     return { from: from, to: day };
   }
-  if (!to && isBefore(day, from)) {
+  if (!to && day.isBefore(from)) {
     return { from: day, to: from };
   }
   if (!to) {
     return { from, to: day };
   }
-  if (isSameDay(to, day) && isSameDay(from, day)) {
+  if (to.isSame(day) && from.isSame(day)) {
     return undefined;
   }
-  if (isSameDay(to, day)) {
+  if (to.isSame(day)) {
     return { from: to, to: undefined };
   }
-  if (isSameDay(from, day)) {
+  if (from.isSame(day)) {
     return undefined;
   }
-  if (isAfter(from, day)) {
+  if (from.isAfter(day)) {
     return { from: day, to };
   }
   return { from, to: day };

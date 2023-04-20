@@ -1,4 +1,5 @@
 import type { Locale } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { ActiveModifiers } from 'types/Modifiers';
 
@@ -15,23 +16,12 @@ export type Labels = {
 };
 
 /** Return the ARIA label for the {@link Day} component. */
-export type DayLabel = (
-  day: Date,
-  activeModifiers: ActiveModifiers,
-  options?: { locale?: Locale }
-) => string;
+export type DayLabel = (day: dayjs.Dayjs) => string;
 
 /** Return the ARIA label for the "next month" / "prev month" buttons in the navigation.*/
-export type NavButtonLabel = (
-  month?: Date,
-  options?: { locale?: Locale }
-) => string;
-
+export type NavButtonLabel = (month?: dayjs.Dayjs) => string;
 /** Return the ARIA label for the Head component.*/
-export type WeekdayLabel = (day: Date, options?: { locale?: Locale }) => string;
+export type WeekdayLabel = (day: dayjs.Dayjs) => string;
 
 /** Return the ARIA label of the week number.*/
-export type WeekNumberLabel = (
-  n: number,
-  options?: { locale?: Locale }
-) => string;
+export type WeekNumberLabel = (n: number) => string;

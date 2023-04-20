@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext } from 'react';
 
-import { isSameDay } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { DayPickerBase } from 'types/DayPickerBase';
 import {
@@ -19,7 +19,7 @@ export type SelectMultipleModifiers = Pick<
 /** Represents the value of a {@link SelectMultipleContext}. */
 export interface SelectMultipleContextValue {
   /** The days that have been selected. */
-  selected: Date[] | undefined;
+  selected: dayjs.Dayjs[] | undefined;
   /** The modifiers for the corresponding selection. */
   modifiers: SelectMultipleModifiers;
   /** Event handler to attach to the day button to enable the multiple select. */
@@ -98,7 +98,7 @@ export function SelectMultipleProviderInternal({
 
     if (activeModifiers.selected) {
       const index = selectedDays.findIndex((selectedDay) =>
-        isSameDay(day, selectedDay)
+        day.isSame(selectedDay, 'day')
       );
       selectedDays.splice(index, 1);
     } else {
@@ -115,7 +115,7 @@ export function SelectMultipleProviderInternal({
     modifiers.disabled.push((day: Date) => {
       const isMaxSelected = max && selected.length > max - 1;
       const isSelected = selected.some((selectedDay) =>
-        isSameDay(selectedDay, day)
+        selectedDay.isSame(day, 'day')
       );
       return Boolean(isMaxSelected && !isSelected);
     });

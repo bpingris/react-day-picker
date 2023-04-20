@@ -1,8 +1,8 @@
-import { addMonths, isSameMonth } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { getNextMonth } from './getNextMonth';
 
-const startingMonth = new Date(2020, 4, 31);
+const startingMonth = dayjs(new Date(2020, 4, 31));
 
 describe('when number of months is 1', () => {
   describe('when the navigation is disabled', () => {
@@ -13,11 +13,11 @@ describe('when number of months is 1', () => {
     });
   });
   describe('when in the navigable range', () => {
-    const toDate = addMonths(startingMonth, 3);
+    const toDate = startingMonth.add(3, 'month');
     it('the next month is not undefined', () => {
       const result = getNextMonth(startingMonth, { toDate });
-      const expectedNextMonth = addMonths(startingMonth, 1);
-      expect(result && isSameMonth(result, expectedNextMonth)).toBeTruthy();
+      const expectedNextMonth = startingMonth.add(1, 'month');
+      expect(result && result.isSame(expectedNextMonth, 'month')).toBeTruthy();
     });
   });
   describe('when not in the navigable range', () => {
@@ -37,15 +37,15 @@ describe('when displaying 3 months', () => {
         numberOfMonths,
         pagedNavigation
       });
-      const expectedNextMonth = addMonths(startingMonth, 3);
-      expect(result && isSameMonth(result, expectedNextMonth)).toBeTruthy();
+      const expectedNextMonth = startingMonth.add(3, 'month');
+      expect(result && result.isSame(expectedNextMonth, 'month')).toBeTruthy();
     });
     describe('when the to-date is ahead less than 3 months', () => {
       it('the next month is undefined', () => {
         const result = getNextMonth(startingMonth, {
           numberOfMonths,
           pagedNavigation,
-          toDate: addMonths(startingMonth, 1)
+          toDate: startingMonth.add(1, 'month')
         });
         expect(result).toBe(undefined);
       });
@@ -58,15 +58,15 @@ describe('when displaying 3 months', () => {
         numberOfMonths,
         pagedNavigation
       });
-      const expectedNextMonth = addMonths(startingMonth, 1);
-      expect(result && isSameMonth(result, expectedNextMonth)).toBeTruthy();
+      const expectedNextMonth = startingMonth.add(1, 'month');
+      expect(result && result.isSame(expectedNextMonth, 'month')).toBeTruthy();
     });
     describe('when the to-date is ahead less than 3 months', () => {
       it('the next month is undefined', () => {
         const result = getNextMonth(startingMonth, {
           numberOfMonths,
           pagedNavigation,
-          toDate: addMonths(startingMonth, 2)
+          toDate: startingMonth.add(1, 'month')
         });
         expect(result).toBe(undefined);
       });

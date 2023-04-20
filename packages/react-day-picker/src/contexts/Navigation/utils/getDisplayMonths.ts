@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
  * months and the from/to date.
  */
 export function getDisplayMonths(
-  month: Date,
+  month: dayjs.Dayjs,
   {
     reverseMonths,
     numberOfMonths

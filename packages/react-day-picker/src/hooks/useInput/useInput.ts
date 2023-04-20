@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
-import { differenceInCalendarDays, format as _format, parse } from 'date-fns';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
+
 import { enUS } from 'date-fns/locale';
 
 import { parseFromToProps } from 'contexts/DayPicker/utils';
@@ -10,8 +13,6 @@ import {
   DayClickEventHandler,
   MonthChangeEventHandler
 } from 'types/EventHandlers';
-
-import { isValidDate } from './utils/isValidDate';
 
 /** The props to attach to the input field when using {@link useInput}. */
 export type InputHTMLAttributes = Pick<
@@ -45,7 +46,7 @@ export interface UseInputOptions
     | 'today'
   > {
   /** The initially selected date */
-  defaultSelected?: Date;
+  defaultSelected?: dayjs.Dayjs;
   /**
    * The format string for formatting the input field. See
    * https://date-fns.org/docs/format for a list of format strings.
@@ -66,7 +67,7 @@ export interface UseInputValue {
   /** A function to reset to the initial state. */
   reset: () => void;
   /** A function to set the selected day. */
-  setSelected: (day: Date | undefined) => void;
+  setSelected: (day?: dayjs.Dayjs) => void;
 }
 
 /** Return props and setters for binding an input field to DayPicker. */
@@ -74,20 +75,20 @@ export function useInput(options: UseInputOptions = {}): UseInputValue {
   const {
     locale = enUS,
     required,
-    format = 'PP',
+    format = 'LL',
     defaultSelected,
-    today = new Date()
+    today = dayjs()
   } = options;
   const { fromDate, toDate } = parseFromToProps(options);
 
   // Shortcut to the DateFns functions
-  const parseValue = (value: string) => parse(value, format, today, { locale });
+  const parseValue = (value: string) => dayjs(value, format);
 
   // Initialize states
   const [month, setMonth] = useState(defaultSelected ?? today);
   const [selectedDay, setSelectedDay] = useState(defaultSelected);
   const defaultInputValue = defaultSelected
-    ? _format(defaultSelected, format, { locale })
+    ? defaultSelected.format(format)
     : '';
   const [inputValue, setInputValue] = useState(defaultInputValue);
 
@@ -97,10 +98,10 @@ export function useInput(options: UseInputOptions = {}): UseInputValue {
     setInputValue(defaultInputValue ?? '');
   };
 
-  const setSelected = (date: Date | undefined) => {
+  const setSelected = (date: dayjs.Dayjs | undefined) => {
     setSelectedDay(date);
     setMonth(date ?? today);
-    setInputValue(date ? _format(date, format, { locale }) : '');
+    setInputValue(date ? date.format(format) : '');
   };
 
   const handleDayClick: DayClickEventHandler = (day, { selected }) => {
@@ -110,7 +111,7 @@ export function useInput(options: UseInputOptions = {}): UseInputValue {
       return;
     }
     setSelectedDay(day);
-    setInputValue(day ? _format(day, format, { locale }) : '');
+    setInputValue(day ? day.format(format) : '');
   };
 
   const handleMonthChange: MonthChangeEventHandler = (month) => {
@@ -123,9 +124,9 @@ export function useInput(options: UseInputOptions = {}): UseInputValue {
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setInputValue(e.target.value);
     const day = parseValue(e.target.value);
-    const isBefore = fromDate && differenceInCalendarDays(fromDate, day) > 0;
-    const isAfter = toDate && differenceInCalendarDays(day, toDate) > 0;
-    if (!isValidDate(day) || isBefore || isAfter) {
+    const isBefore = fromDate && fromDate.diff(day, 'day') > 0;
+    const isAfter = toDate && day.diff(toDate, 'day') > 0;
+    if (!day.isValid() || isBefore || isAfter) {
       setSelectedDay(undefined);
       return;
     }
@@ -137,7 +138,7 @@ export function useInput(options: UseInputOptions = {}): UseInputValue {
   // a valid date, reset the calendar and the input value.
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = (e) => {
     const day = parseValue(e.target.value);
-    if (!isValidDate(day)) {
+    if (!day.isValid()) {
       reset();
     }
   };
@@ -150,7 +151,7 @@ export function useInput(options: UseInputOptions = {}): UseInputValue {
       return;
     }
     const day = parseValue(e.target.value);
-    if (isValidDate(day)) {
+    if (day.isValid()) {
       setMonth(day);
     }
   };
@@ -171,7 +172,7 @@ export function useInput(options: UseInputOptions = {}): UseInputValue {
     onChange: handleChange,
     onFocus: handleFocus,
     value: inputValue,
-    placeholder: _format(new Date(), format, { locale })
+    placeholder: dayjs().format(format)
   };
 
   return { dayPickerProps, inputProps, reset, setSelected };

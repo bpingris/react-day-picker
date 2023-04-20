@@ -1,4 +1,4 @@
-import { addDays, endOfMonth, startOfMonth } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { getActiveModifiers } from 'contexts/Modifiers';
 import { Modifiers } from 'types/Modifiers';
@@ -12,11 +12,11 @@ import { Modifiers } from 'types/Modifiers';
  * https://github.com/gpbl/react-day-picker/pull/1576
  */
 export function getInitialFocusTarget(
-  displayMonths: Date[],
+  displayMonths: dayjs.Dayjs[],
   modifiers: Modifiers
 ) {
-  const firstDayInMonth = startOfMonth(displayMonths[0]);
-  const lastDayInMonth = endOfMonth(displayMonths[displayMonths.length - 1]);
+  const firstDayInMonth = displayMonths[0].startOf('month');
+  const lastDayInMonth = displayMonths[displayMonths.length - 1].endOf('month');
 
   // TODO: cleanup code
   let firstFocusableDay;
@@ -26,7 +26,7 @@ export function getInitialFocusTarget(
     const activeModifiers = getActiveModifiers(date, modifiers);
     const isFocusable = !activeModifiers.disabled && !activeModifiers.hidden;
     if (!isFocusable) {
-      date = addDays(date, 1);
+      date = date.add(1, 'day');
       continue;
     }
     if (activeModifiers.selected) {
@@ -38,7 +38,7 @@ export function getInitialFocusTarget(
     if (!firstFocusableDay) {
       firstFocusableDay = date;
     }
-    date = addDays(date, 1);
+    date = date.add(1, 'day');
   }
   if (today) {
     return today;

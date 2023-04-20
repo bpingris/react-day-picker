@@ -1,4 +1,4 @@
-import { addMonths } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { renderDayPickerHook } from 'test/render';
 
@@ -6,7 +6,7 @@ import { ActiveModifiers } from 'types/Modifiers';
 
 import { useActiveModifiers } from './useActiveModifiers';
 
-const date = new Date(2010, 5, 23);
+const date = dayjs(new Date(2010, 5, 23));
 
 describe('when in the same month', () => {
   const displayMonth = date;
@@ -19,7 +19,7 @@ describe('when in the same month', () => {
 });
 
 describe('when not in the same display month', () => {
-  const displayMonth = addMonths(date, 1);
+  const displayMonth = date.add(1, 'month');
   test('should return the outside modifier', () => {
     const result = renderDayPickerHook<ActiveModifiers>(() =>
       useActiveModifiers(date, displayMonth)

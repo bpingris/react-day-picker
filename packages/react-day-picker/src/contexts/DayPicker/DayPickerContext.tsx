@@ -18,6 +18,7 @@ import { ClassNames, Styles } from 'types/Styles';
 
 import { getDefaultContextValues } from './defaultContextValues';
 import { parseFromToProps } from './utils';
+import dayjs from 'dayjs';
 
 /**
  * The value of the {@link DayPickerContext} extends the props from DayPicker
@@ -43,7 +44,7 @@ export interface DayPickerContextValue extends DayPickerBase {
   modifiers: DayModifiers;
   numberOfMonths: number;
   styles: Styles;
-  today: Date;
+  today: dayjs.Dayjs;
 }
 
 /**

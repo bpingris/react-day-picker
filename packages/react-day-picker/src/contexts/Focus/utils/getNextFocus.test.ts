@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-standalone-expect */
-import { addDays, format, parseISO } from 'date-fns';
+import dayjs from 'dayjs';
 
 import {
   InternalModifier,
@@ -103,19 +103,19 @@ describe.each(tests)(
   'when focusing the $moveBy $direction $focusedDay',
   ({ focusedDay, moveBy, direction, context, expectedNextFocus }) => {
     test(`should return ${expectedNextFocus}`, () => {
-      const nextFocus = getNextFocus(parseISO(focusedDay), {
+      const nextFocus = getNextFocus(dayjs(focusedDay, 'YYYY-MM-DD'), {
         moveBy,
         direction,
         context
       });
-      expect(format(nextFocus, 'yyyy-MM-dd')).toBe(expectedNextFocus);
+      expect(nextFocus.format('YYYY-MM-DD')).toBe(expectedNextFocus);
     });
   }
 );
 
 describe('when reaching the "fromDate"', () => {
-  const focusedDay = new Date();
-  const fromDate = addDays(focusedDay, -1);
+  const focusedDay = dayjs(new Date());
+  const fromDate = focusedDay.subtract(1, 'day');
   test('next focus should be "fromDate"', () => {
     const nextFocus = getNextFocus(focusedDay, {
       moveBy: 'day',
@@ -127,8 +127,8 @@ describe('when reaching the "fromDate"', () => {
 });
 
 describe('when reaching the "toDate"', () => {
-  const focusedDay = new Date();
-  const toDate = addDays(focusedDay, 1);
+  const focusedDay = dayjs(new Date());
+  const toDate = focusedDay.add(1, 'day');
   test('next focus should be "toDate"', () => {
     const nextFocus = getNextFocus(focusedDay, {
       moveBy: 'day',
@@ -218,22 +218,29 @@ describe.each(modifiersTest)(
   (modifierTest) => {
     const modifiers: InternalModifiers = {
       ...emptyModifiers,
-      [modifierTest.modifierName]: [parseISO(modifierTest.skippedDay)]
+      [modifierTest.modifierName]: [
+        dayjs(modifierTest.skippedDay, 'YYYY-MM-DD')
+      ]
     };
     const context = {
       fromDate: modifierTest.fromDate
-        ? parseISO(modifierTest.fromDate)
+        ? dayjs(modifierTest.fromDate, 'YYYY-MM-DD')
         : undefined,
-      toDate: modifierTest.toDate ? parseISO(modifierTest.toDate) : undefined
+      toDate: modifierTest.toDate
+        ? dayjs(modifierTest.toDate, 'YYYY-MM-DD')
+        : undefined
     };
     test(`should skip the ${modifierTest.modifierName} day`, () => {
-      const nextFocus = getNextFocus(parseISO(modifierTest.focusedDay), {
-        moveBy: modifierTest.moveBy,
-        direction: modifierTest.direction,
-        context,
-        modifiers
-      });
-      expect(format(nextFocus, 'yyyy-MM-dd')).toBe(
+      const nextFocus = getNextFocus(
+        dayjs(modifierTest.focusedDay, 'YYYY-MM-DD'),
+        {
+          moveBy: modifierTest.moveBy,
+          direction: modifierTest.direction,
+          context,
+          modifiers
+        }
+      );
+      expect(nextFocus.format('YYYY-MM-DD')).toBe(
         modifierTest.expectedNextFocus
       );
     });
@@ -241,7 +248,7 @@ describe.each(modifiersTest)(
 );
 
 test('should avoid infinite recursion', () => {
-  const focusedDay = new Date(2022, 7, 17);
+  const focusedDay = dayjs(new Date(2022, 7, 17));
   const modifiers: Modifiers = {
     outside: [],
     disabled: [{ after: focusedDay }],

@@ -4,6 +4,7 @@ import {
   differenceInCalendarDays,
   subDays
 } from 'date-fns';
+import dayjs from 'dayjs';
 import { DayPickerProps } from 'DayPicker';
 
 import { renderDayPickerHook } from 'test/render';
@@ -15,8 +16,8 @@ import { ActiveModifiers } from 'types/Modifiers';
 
 import { SelectRangeContextValue, useSelectRange } from './SelectRangeContext';
 
-const today = new Date(2021, 11, 8);
-freezeBeforeAll(today);
+const today = dayjs(new Date(2021, 11, 8));
+freezeBeforeAll(today.toDate());
 
 function renderHook(props?: Partial<DayPickerProps>) {
   return renderDayPickerHook<SelectRangeContextValue>(useSelectRange, props);
@@ -35,7 +36,7 @@ const initialProps: DayPickerRangeProps = {
 };
 
 const from = today;
-const to = addDays(today, 6);
+const to = today.add(6, 'day');
 const stubEvent = {} as React.MouseEvent;
 
 describe('when no days are selected', () => {

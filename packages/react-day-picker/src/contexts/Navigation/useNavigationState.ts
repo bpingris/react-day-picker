@@ -5,11 +5,12 @@ import { useControlledValue } from 'hooks/useControlledValue';
 
 import { getInitialMonth } from './utils/getInitialMonth';
 
+import dayjs from 'dayjs';
 export type NavigationState = [
   /** The month DayPicker is navigating at */
-  month: Date,
+  month: dayjs.Dayjs,
   /** Go to the specified month. */
-  goToMonth: (month: Date) => void
+  goToMonth: (month: dayjs.Dayjs) => void
 ];
 
 /** Controls the navigation state. */

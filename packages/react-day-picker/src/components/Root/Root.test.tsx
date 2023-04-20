@@ -2,6 +2,7 @@ import React from 'react';
 
 import { RenderResult } from '@testing-library/react';
 import { addDays } from 'date-fns';
+import dayjs from 'dayjs';
 import { DayPickerProps } from 'DayPicker';
 
 import { customRender } from 'test/render';
@@ -13,8 +14,8 @@ import { ClassNames } from 'types/Styles';
 
 import { Root } from './Root';
 
-const today = new Date(2020, 10, 4);
-freezeBeforeAll(today);
+const today = dayjs(new Date(2020, 10, 4));
+freezeBeforeAll(today.toDate());
 
 let container: HTMLElement;
 let view: RenderResult;

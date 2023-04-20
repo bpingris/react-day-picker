@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import dayjs from 'dayjs';
 
 import { isSameDay } from 'date-fns';
 
@@ -42,9 +43,9 @@ export type DayRender = {
  */
 export function useDayRender(
   /** The date to render. */
-  day: Date,
+  day: dayjs.Dayjs,
   /** The month where the date is displayed (if not the same as `date`, it means it is an "outside" day). */
-  displayMonth: Date,
+  displayMonth: dayjs.Dayjs,
   /** A ref to the button element that will be target of focus when rendered (if required). */
   buttonRef: React.RefObject<HTMLButtonElement>
 ): DayRender {

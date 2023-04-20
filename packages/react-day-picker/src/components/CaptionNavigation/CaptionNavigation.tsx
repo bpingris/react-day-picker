@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { isSameMonth } from 'date-fns';
-
 import { CaptionProps } from 'components/Caption/Caption';
 import { Navigation } from 'components/Navigation';
 import { useDayPicker } from 'contexts/DayPicker';
@@ -16,7 +14,7 @@ export function CaptionNavigation(props: CaptionProps): JSX.Element {
     useNavigation();
 
   const displayIndex = displayMonths.findIndex((month) =>
-    isSameMonth(props.displayMonth, month)
+    props.displayMonth.isSame(month, 'month')
   );
 
   const isFirst = displayIndex === 0;

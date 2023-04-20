@@ -4,13 +4,14 @@ import { CaptionDropdowns } from 'components/CaptionDropdowns';
 import { CaptionLabel } from 'components/CaptionLabel';
 import { CaptionNavigation } from 'components/CaptionNavigation';
 import { useDayPicker } from 'contexts/DayPicker';
+import dayjs from 'dayjs';
 
 /** Represent the props of the {@link Caption} component. */
 export interface CaptionProps {
   /** The ID for the heading element. Must be the same as the labelled-by in Table. */
   id?: string;
   /** The month where the caption is displayed. */
-  displayMonth: Date;
+  displayMonth: dayjs.Dayjs;
 }
 
 /**

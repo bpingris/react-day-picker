@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { setYear, startOfMonth, startOfYear } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { Dropdown } from 'components/Dropdown';
 import { useDayPicker } from 'contexts/DayPicker';
@@ -11,7 +12,7 @@ import { MonthChangeEventHandler } from 'types/EventHandlers';
  */
 export interface YearsDropdownProps {
   /** The month where the drop-down is displayed. */
-  displayMonth: Date;
+  displayMonth: dayjs.Dayjs;
   /** Callback to handle the `change` event. */
   onChange: MonthChangeEventHandler;
 }
@@ -33,23 +34,22 @@ export function YearsDropdown(props: YearsDropdownProps): JSX.Element {
     labels: { labelYearDropdown }
   } = useDayPicker();
 
-  const years: Date[] = [];
+  const years: dayjs.Dayjs[] = [];
 
   // Dropdown should appear only when both from/toDate is set
   if (!fromDate) return <></>;
   if (!toDate) return <></>;
 
-  const fromYear = fromDate.getFullYear();
-  const toYear = toDate.getFullYear();
+  const fromYear = fromDate.year();
+  const toYear = toDate.year();
   for (let year = fromYear; year <= toYear; year++) {
-    years.push(setYear(startOfYear(new Date()), year));
+    years.push(dayjs().startOf('year').set('year', year));
   }
 
   const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
-    const newMonth = setYear(
-      startOfMonth(displayMonth),
-      Number(e.target.value)
-    );
+    const newMonth = displayMonth
+      .startOf('month')
+      .set('year', Number(e.target.value));
     props.onChange(newMonth);
   };
 
@@ -62,11 +62,11 @@ export function YearsDropdown(props: YearsDropdownProps): JSX.Element {
       className={classNames.dropdown_year}
       style={styles.dropdown_year}
       onChange={handleChange}
-      value={displayMonth.getFullYear()}
+      value={displayMonth.year()}
       caption={formatYearCaption(displayMonth, { locale })}
     >
       {years.map((year) => (
-        <option key={year.getFullYear()} value={year.getFullYear()}>
+        <option key={year.year()} value={year.year()}>
           {formatYearCaption(year, { locale })}
         </option>
       ))}

@@ -1,4 +1,4 @@
-import { addDays } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { DayPickerContextValue } from 'contexts/DayPicker';
 import { getDefaultContextValues } from 'contexts/DayPicker/defaultContextValues';
@@ -30,7 +30,7 @@ const internalModifiers = [Selected, Disabled, Hidden, Today];
 test.each(internalModifiers)(
   'should transform to array the modifiers from the "%s" prop',
   (propName) => {
-    const value = new Date();
+    const value = dayjs();
     const modifiers = getInternalModifiers(
       { ...defaultDayPickerContext, [propName]: value },
       defaultSelectMultipleContext,
@@ -41,7 +41,7 @@ test.each(internalModifiers)(
 );
 
 describe('when navigation is limited by "fromDate"', () => {
-  const fromDate = new Date();
+  const fromDate = dayjs();
   const dayPickerContext: DayPickerContextValue = {
     ...defaultDayPickerContext,
     fromDate
@@ -57,7 +57,7 @@ describe('when navigation is limited by "fromDate"', () => {
 });
 
 describe('when navigation is limited by "toDate"', () => {
-  const toDate = new Date();
+  const toDate = dayjs();
   const dayPickerContext: DayPickerContextValue = {
     ...defaultDayPickerContext,
     toDate
@@ -73,7 +73,7 @@ describe('when navigation is limited by "toDate"', () => {
 });
 
 describe('when in multiple select mode', () => {
-  const disabledDate = new Date();
+  const disabledDate = dayjs();
   const dayPickerContext: DayPickerContextValue = {
     ...defaultDayPickerContext,
     mode: 'multiple'
@@ -95,10 +95,10 @@ describe('when in multiple select mode', () => {
 });
 
 describe('when in range select mode', () => {
-  const disabled = [new Date()];
-  const rangeStart = new Date();
-  const rangeMiddle = [addDays(rangeStart, 1), addDays(rangeStart, 2)];
-  const rangeEnd = [addDays(rangeStart, 3)];
+  const disabled = [dayjs()];
+  const rangeStart = dayjs();
+  const rangeMiddle = [rangeStart.add(1, 'day'), rangeStart.add(2, 'day')];
+  const rangeEnd = [rangeStart.add(3, 'day')];
   const dayPickerContext: DayPickerContextValue = {
     ...defaultDayPickerContext,
     mode: 'range'

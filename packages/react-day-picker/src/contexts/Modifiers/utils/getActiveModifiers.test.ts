@@ -1,4 +1,4 @@
-import { addMonths } from 'date-fns';
+import dayjs from 'dayjs';
 
 import {
   InternalModifier,
@@ -8,7 +8,7 @@ import {
 
 import { getActiveModifiers } from './getActiveModifiers';
 
-const day = new Date();
+const day = dayjs(new Date());
 
 const internalModifiers: InternalModifiers = {
   [InternalModifier.Outside]: [],
@@ -45,7 +45,7 @@ describe('when the day is not in the same display month', () => {
   const modifiers: Modifiers = {
     ...internalModifiers
   };
-  const displayMonth = addMonths(day, 1);
+  const displayMonth = day.add(1, 'month');
   const result = getActiveModifiers(day, modifiers, displayMonth);
   test('should not return the modifier as active', () => {
     expect(result.outside).toBe(true);

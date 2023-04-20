@@ -1,6 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-// import { isSameDay } from 'date-fns';
 import dayjs from 'dayjs';
 
 import { useDayPicker } from 'contexts/DayPicker';
@@ -17,11 +16,11 @@ import {
 /** Represents the value of the {@link FocusContext}. */
 export type FocusContextValue = {
   /** The day currently focused. */
-  focusedDay: Date | undefined;
+  focusedDay?: dayjs.Dayjs;
   /** Day that will be focused.  */
-  focusTarget: Date | undefined;
+  focusTarget?: dayjs.Dayjs;
   /** Focus a day. */
-  focus: (day: Date) => void;
+  focus: (day: dayjs.Dayjs) => void;
   /** Blur the focused day. */
   blur: () => void;
   /** Focus the day after the focused day. */
@@ -60,8 +59,8 @@ export function FocusProvider(props: { children: ReactNode }): JSX.Element {
   const navigation = useNavigation();
   const modifiers = useModifiers();
 
-  const [focusedDay, setFocusedDay] = useState<Date | undefined>();
-  const [lastFocused, setLastFocused] = useState<Date | undefined>();
+  const [focusedDay, setFocusedDay] = useState<dayjs.Dayjs | undefined>();
+  const [lastFocused, setLastFocused] = useState<dayjs.Dayjs | undefined>();
 
   const initialFocusTarget = getInitialFocusTarget(
     navigation.displayMonths,
@@ -78,7 +77,7 @@ export function FocusProvider(props: { children: ReactNode }): JSX.Element {
     setLastFocused(focusedDay);
     setFocusedDay(undefined);
   };
-  const focus = (date: Date) => {
+  const focus = (date: dayjs.Dayjs) => {
     setFocusedDay(date);
   };
 

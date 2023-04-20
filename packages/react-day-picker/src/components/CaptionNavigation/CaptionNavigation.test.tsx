@@ -1,7 +1,7 @@
 import React from 'react';
 
 import userEvent from '@testing-library/user-event';
-import { addMonths } from 'date-fns';
+import dayjs from 'dayjs';
 import { DayPickerProps } from 'DayPicker';
 
 import { customRender } from 'test/render';
@@ -15,9 +15,9 @@ import { freezeBeforeAll } from 'test/utils';
 
 import { CaptionNavigation } from './CaptionNavigation';
 
-const today = new Date(2021, 8);
+const today = dayjs(new Date(2021, 8));
 
-freezeBeforeAll(today);
+freezeBeforeAll(today.toDate());
 
 const user = userEvent.setup();
 
@@ -53,7 +53,7 @@ describe('when rendered', () => {
   describe('when displaying the last of multiple months', () => {
     const numberOfMonths = 3;
     beforeEach(() => {
-      const lastMonth = addMonths(today, numberOfMonths - 1);
+      const lastMonth = today.add(numberOfMonths - 1, 'month');
       customRender(<CaptionNavigation displayMonth={lastMonth} />, {
         ...dayPickerProps,
         numberOfMonths
@@ -70,7 +70,7 @@ describe('when rendered', () => {
   describe('when displaying a month in the middle of multiple months', () => {
     const numberOfMonths = 3;
     beforeEach(() => {
-      const lastMonth = addMonths(today, numberOfMonths - 2);
+      const lastMonth = today.add(numberOfMonths - 2, 'month');
       customRender(<CaptionNavigation displayMonth={lastMonth} />, {
         ...dayPickerProps,
         numberOfMonths
@@ -90,7 +90,7 @@ describe('when rendered', () => {
         ...dayPickerProps,
         onMonthChange: jest.fn()
       };
-      const previousMonth = addMonths(today, -1);
+      const previousMonth = today.subtract(1);
       beforeEach(async () => {
         customRender(<CaptionNavigation displayMonth={today} />, testContext);
         await user.click(getPrevButton());
@@ -121,7 +121,7 @@ describe('when rendered', () => {
         ...dayPickerProps,
         onMonthChange: jest.fn()
       };
-      const nextMonth = addMonths(today, 1);
+      const nextMonth = today.add(1);
       beforeEach(async () => {
         customRender(<CaptionNavigation displayMonth={today} />, testContext);
         await user.click(getNextButton());

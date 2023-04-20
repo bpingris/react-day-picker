@@ -1,4 +1,5 @@
 import { getActiveModifiers, useModifiers } from 'contexts/Modifiers';
+import dayjs from 'dayjs';
 import { ActiveModifiers } from 'types/Modifiers';
 
 /**
@@ -10,12 +11,12 @@ import { ActiveModifiers } from 'types/Modifiers';
  * @param displayMonth
  */
 export function useActiveModifiers(
-  day: Date,
+  day: dayjs.Dayjs,
   /**
    * The month where the date is displayed. If not the same as `date`, the day
    * is an "outside day".
    */
-  displayMonth?: Date
+  displayMonth?: dayjs.Dayjs
 ): ActiveModifiers {
   const modifiers = useModifiers();
   const activeModifiers = getActiveModifiers(day, modifiers, displayMonth);

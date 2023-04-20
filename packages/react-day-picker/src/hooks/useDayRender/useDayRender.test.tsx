@@ -1,6 +1,6 @@
 import { createRef } from 'react';
 
-import { addDays, addMonths } from 'date-fns';
+import dayjs from 'dayjs';
 import { DayPickerProps } from 'DayPicker';
 
 import { mockedContexts } from 'test/mockedContexts';
@@ -16,13 +16,13 @@ import { EventName } from 'hooks/useDayEventHandlers';
 
 import { useDayRender } from './useDayRender';
 
-const today = new Date(2022, 5, 13);
+const today = dayjs(new Date(2022, 5, 13));
 
-freezeBeforeAll(today);
+freezeBeforeAll(today.toDate());
 
 function renderHook(
-  date: Date,
-  displayMonth: Date,
+  date: dayjs.Dayjs,
+  displayMonth: dayjs.Dayjs,
   dayPickerProps?: DayPickerProps,
   contexts?: {
     single: SelectSingleContextValue;
@@ -123,7 +123,7 @@ describe('when showing the outside days', () => {
   const dayPickerProps: DayPickerProps = { showOutsideDays: false };
   describe('when the day is outside', () => {
     const day = today;
-    const displayMonth = addMonths(today, 1);
+    const displayMonth = today.add(1, 'day');
     test('should be hidden', () => {
       const result = renderHook(day, displayMonth, dayPickerProps);
       expect(result.current.isHidden).toBe(true);
@@ -222,8 +222,8 @@ describe('when "classNames.day" is passed in', () => {
 });
 
 describe('when the day is not target of focus', () => {
-  const yesterday = addDays(today, -1);
-  const tomorrow = addDays(today, 1);
+  const yesterday = today.subtract(1, 'day');
+  const tomorrow = today.add(1, 'day');
   const focusContext: FocusContextValue = {
     ...mockedContexts.focus,
     focusTarget: yesterday

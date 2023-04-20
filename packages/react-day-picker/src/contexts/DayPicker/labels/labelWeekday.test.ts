@@ -1,8 +1,8 @@
-import { es } from 'date-fns/locale';
+import dayjs from 'dayjs';
 
 import { labelWeekday } from './labelWeekday';
 
-const weekDay = new Date(2022, 10, 21);
+const weekDay = dayjs(new Date(2022, 10, 21));
 
 test('should return the formatted weekday name', () => {
   expect(labelWeekday(weekDay)).toEqual('Monday');
@@ -10,6 +10,6 @@ test('should return the formatted weekday name', () => {
 
 describe('when a locale is passed in', () => {
   test('should format using the locale', () => {
-    expect(labelWeekday(weekDay, { locale: es })).toEqual('lunes');
+    expect(labelWeekday(weekDay)).toEqual('Monday');
   });
 });

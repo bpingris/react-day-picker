@@ -1,4 +1,4 @@
-import { addDays, subDays } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { DateRange } from 'types/Matchers';
 
@@ -6,7 +6,7 @@ import { addToRange } from './addToRange';
 
 describe('when no "from" is the range', () => {
   const range = { from: undefined };
-  const day = new Date();
+  const day = dayjs(new Date());
   let result: DateRange | undefined;
   beforeAll(() => {
     result = addToRange(day, range);
@@ -17,7 +17,7 @@ describe('when no "from" is the range', () => {
 });
 
 describe('when no "to" is the range', () => {
-  const day = new Date();
+  const day = dayjs(new Date());
   const range = { from: day, to: undefined };
   describe('and the day is the same as the "from" day', () => {
     let result: DateRange | undefined;
@@ -29,7 +29,7 @@ describe('when no "to" is the range', () => {
     });
   });
   describe('and the day is before "from" day', () => {
-    const day = subDays(range.from, 1);
+    const day = range.from.subtract(1, 'day');
     let result: DateRange | undefined;
     beforeAll(() => {
       result = addToRange(day, range);
@@ -39,7 +39,7 @@ describe('when no "to" is the range', () => {
     });
   });
   describe('and the day is after the "from" day', () => {
-    const day = addDays(range.from, 1);
+    const day = range.from.add(1, 'day');
     let result: DateRange | undefined;
     beforeAll(() => {
       result = addToRange(day, range);
@@ -51,7 +51,7 @@ describe('when no "to" is the range', () => {
 });
 
 describe('when "from", "to" and "day" are the same', () => {
-  const day = new Date();
+  const day = dayjs(new Date());
   const range = { from: day, to: day };
   let result: DateRange | undefined;
   beforeAll(() => {
@@ -63,8 +63,8 @@ describe('when "from", "to" and "day" are the same', () => {
 });
 
 describe('when "to" and "day" are the same', () => {
-  const from = new Date();
-  const to = addDays(from, 4);
+  const from = dayjs(new Date());
+  const to = from.add(4, 'day');
   const day = to;
   const range = { from, to };
   let result: DateRange | undefined;
@@ -77,8 +77,8 @@ describe('when "to" and "day" are the same', () => {
 });
 
 describe('when "from" and "day" are the same', () => {
-  const from = new Date();
-  const to = addDays(from, 4);
+  const from = dayjs(new Date());
+  const to = from.add(4, 'day');
   const day = from;
   const range = { from, to };
   let result: DateRange | undefined;
@@ -91,9 +91,9 @@ describe('when "from" and "day" are the same', () => {
 });
 
 describe('when "from" is after "day"', () => {
-  const day = new Date();
-  const from = addDays(day, 1);
-  const to = addDays(from, 4);
+  const day = dayjs(new Date());
+  const from = day.add(1, 'day');
+  const to = from.add(4, 'day');
   const range = { from, to };
   let result: DateRange | undefined;
   beforeAll(() => {
@@ -105,9 +105,9 @@ describe('when "from" is after "day"', () => {
 });
 
 describe('when "from" is before "day"', () => {
-  const day = new Date();
-  const from = subDays(day, 1);
-  const to = addDays(from, 4);
+  const day = dayjs(new Date());
+  const from = day.subtract(1, 'day');
+  const to = from.add(4, 'day');
   const range = { from, to };
   let result: DateRange | undefined;
   beforeAll(() => {

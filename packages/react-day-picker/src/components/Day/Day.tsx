@@ -3,11 +3,12 @@ import React, { useRef } from 'react';
 import { useDayRender } from 'hooks/useDayRender';
 
 import { Button } from '../Button';
+import dayjs from 'dayjs';
 
 /** Represent the props used by the {@link Day} component. */
 export interface DayProps {
   /** The month where the date is displayed. */
-  displayMonth: Date;
+  displayMonth: dayjs.Dayjs;
   /** The date to render. */
   date: Date;
 }

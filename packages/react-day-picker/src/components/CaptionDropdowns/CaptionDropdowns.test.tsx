@@ -2,7 +2,7 @@ import React from 'react';
 
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { setMonth, setYear } from 'date-fns';
+import dayjs from 'dayjs';
 import { DayPickerProps } from 'DayPicker';
 
 import { customRender } from 'test/render';
@@ -19,11 +19,11 @@ import { CustomComponents } from 'types/DayPickerBase';
 
 import { CaptionDropdowns } from './CaptionDropdowns';
 
-const today = new Date(2021, 8);
+const today = dayjs(new Date(2021, 8));
 const fromYear = 2020;
 const toYear = 2025;
 
-freezeBeforeAll(today);
+freezeBeforeAll(today.toDate());
 
 const user = userEvent.setup();
 function setup(props: CaptionProps, dayPickerProps?: DayPickerProps) {
@@ -85,24 +85,18 @@ describe('when a month is selected', () => {
     customRender(<CaptionDropdowns displayMonth={today} />, dayPickerProps);
   });
   describe('from the months drop-down', () => {
-    const newMonth = setMonth(today, 0);
+    const newMonth = dayjs(today).set('month', 0);
     beforeEach(async () => {
-      await user.selectOptions(
-        getMonthDropdown(),
-        newMonth.getMonth().toString()
-      );
+      await user.selectOptions(getMonthDropdown(), newMonth.month().toString());
     });
     test('should call the `onMonthChange` callback', () => {
       expect(dayPickerProps.onMonthChange).toHaveBeenCalledWith(newMonth);
     });
   });
   describe('from the years drop-down', () => {
-    const newYear = setYear(today, 2022);
+    const newYear = dayjs(today).set('year', 2022);
     beforeEach(async () => {
-      await user.selectOptions(
-        getYearDropdown(),
-        newYear.getFullYear().toString()
-      );
+      await user.selectOptions(getYearDropdown(), newYear.year().toString());
     });
     test('should call the `onMonthChange` callback', () => {
       expect(dayPickerProps.onMonthChange).toHaveBeenCalledWith(newYear);

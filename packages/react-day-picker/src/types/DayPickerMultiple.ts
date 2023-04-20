@@ -1,4 +1,5 @@
 import { DayPickerProps } from 'DayPicker';
+import dayjs from 'dayjs';
 
 import { DayPickerContextValue } from 'contexts/DayPicker';
 
@@ -9,7 +10,7 @@ import { SelectMultipleEventHandler } from './EventHandlers';
 export interface DayPickerMultipleProps extends DayPickerBase {
   mode: 'multiple';
   /** The selected days. */
-  selected?: Date[] | undefined;
+  selected?: dayjs.Dayjs[] | undefined;
   /** Event fired when a days added or removed to the selection. */
   onSelect?: SelectMultipleEventHandler;
   /** The minimum amount of days that can be selected. */

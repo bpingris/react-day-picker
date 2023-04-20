@@ -4,12 +4,13 @@ import { DayPickerContextValue } from 'contexts/DayPicker';
 
 import { DayPickerBase } from './DayPickerBase';
 import { SelectSingleEventHandler } from './EventHandlers';
+import dayjs from 'dayjs';
 
 /** The props for the {@link DayPicker} component when using `mode="single"`. */
 export interface DayPickerSingleProps extends DayPickerBase {
   mode: 'single';
   /** The selected day. */
-  selected?: Date | undefined;
+  selected?: dayjs.Dayjs;
   /** Event fired when a day is selected. */
   onSelect?: SelectSingleEventHandler;
   /** Make the selection required. */

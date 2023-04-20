@@ -2,9 +2,9 @@ import { screen } from '@testing-library/react';
 // import { format } from 'date-fns';
 import dayjs from 'dayjs';
 
-export function getDayButton(day: Date, index = 0) {
+export function getDayButton(day: dayjs.Dayjs, index = 0) {
   return screen.getAllByRole('gridcell', {
-    name: day.getDate().toString()
+    name: day.toDate().getDate().toString()
   })[index];
 }
 
@@ -28,19 +28,19 @@ export function getAllEnabledDays() {
   return Array.from(buttons).filter((button) => !button.disabled);
 }
 
-export function getDayButtons(day: Date) {
+export function getDayButtons(day: dayjs.Dayjs) {
   return screen.getByRole('button', {
     name: dayjs(day).format('do MMMM (EEEE)')
   });
 }
 
-export function queryDayButton(day: Date) {
+export function queryDayButton(day: dayjs.Dayjs) {
   return screen.queryByRole('button', {
     name: dayjs(day).format('do MMMM (EEEE)')
   });
 }
 
-export function getDayCell(day: Date) {
+export function getDayCell(day: dayjs.Dayjs) {
   return getDayButton(day);
 }
 export function getWeekButton(week: number) {

@@ -14,6 +14,7 @@ import {
 import { DayPickerContextValue } from 'contexts/DayPicker';
 import { getActiveModifiers } from 'contexts/Modifiers';
 import { Modifiers } from 'types/Modifiers';
+import dayjs from 'dayjs';
 
 export type MoveFocusBy =
   | 'day'
@@ -43,7 +44,10 @@ export type FocusDayOptions = {
 const MAX_RETRY = 365;
 
 /** Return the next date to be focused. */
-export function getNextFocus(focusedDay: Date, options: FocusDayOptions): Date {
+export function getNextFocus(
+  focusedDay: dayjs.Dayjs,
+  options: FocusDayOptions
+): dayjs.Dayjs {
   const {
     moveBy,
     direction,

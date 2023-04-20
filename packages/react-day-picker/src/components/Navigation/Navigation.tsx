@@ -1,4 +1,5 @@
 import React from 'react';
+import dayjs from 'dayjs';
 
 import { IconLeft } from 'components/IconLeft';
 import { IconRight } from 'components/IconRight';
@@ -9,11 +10,11 @@ import { Button } from '../Button';
 /** The props for the {@link Navigation} component. */
 export interface NavigationProps {
   /** The month where the caption is displayed. */
-  displayMonth: Date;
+  displayMonth: dayjs.Dayjs;
   /** The previous month. */
-  previousMonth?: Date;
+  previousMonth?: dayjs.Dayjs;
   /** The next month. */
-  nextMonth?: Date;
+  nextMonth?: dayjs.Dayjs;
   /** Hide the previous button. */
   hidePrevious: boolean;
   /** Hide the next button. */
@@ -28,7 +29,6 @@ export interface NavigationProps {
 export function Navigation(props: NavigationProps): JSX.Element {
   const {
     dir,
-    locale,
     classNames,
     styles,
     labels: { labelPrevious, labelNext },
@@ -39,13 +39,13 @@ export function Navigation(props: NavigationProps): JSX.Element {
     return <></>;
   }
 
-  const previousLabel = labelPrevious(props.previousMonth, { locale });
+  const previousLabel = labelPrevious(props.previousMonth);
   const previousClassName = [
     classNames.nav_button,
     classNames.nav_button_previous
   ].join(' ');
 
-  const nextLabel = labelNext(props.nextMonth, { locale });
+  const nextLabel = labelNext(props.nextMonth);
   const nextClassName = [
     classNames.nav_button,
     classNames.nav_button_next
