@@ -49,8 +49,11 @@
  * @see {@link isMatch}
  *
  * */
+import dayjs from 'dayjs';
+
 export type Matcher =
   | boolean
+  | dayjs.Dayjs
   | ((date: Date) => boolean)
   | Date
   | Date[]

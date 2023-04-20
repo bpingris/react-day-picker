@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
+import dayjs from 'dayjs';
 
 export function getDayButton(day: Date, index = 0) {
   return screen.getAllByRole('gridcell', {
@@ -29,13 +30,13 @@ export function getAllEnabledDays() {
 
 export function getDayButtons(day: Date) {
   return screen.getByRole('button', {
-    name: format(day, 'do MMMM (EEEE)')
+    name: dayjs(day).format('do MMMM (EEEE)')
   });
 }
 
 export function queryDayButton(day: Date) {
   return screen.queryByRole('button', {
-    name: format(day, 'do MMMM (EEEE)')
+    name: dayjs(day).format('do MMMM (EEEE)')
   });
 }
 

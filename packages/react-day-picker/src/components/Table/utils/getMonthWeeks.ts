@@ -1,10 +1,4 @@
-import {
-  addWeeks,
-  endOfMonth,
-  getWeeksInMonth,
-  Locale,
-  startOfMonth
-} from 'date-fns';
+import dayjs from 'dayjs';
 
 import { daysToMonthWeeks } from './daysToMonthWeeks';
 
@@ -13,8 +7,15 @@ export type MonthWeek = {
   /** The week number from the start of the year. */
   weekNumber: number;
   /** The dates in the week. */
-  dates: Date[];
+  dates: dayjs.Dayjs[];
 };
+
+function getWeeksInMonth(month: dayjs.Dayjs): number {
+  const startOfMonth = month.startOf('month');
+  const endOfMonth = month.endOf('month');
+
+  return endOfMonth.diff(startOfMonth, 'week');
+}
 
 /**
  * Return the weeks belonging to the given month, adding the "outside days" to
@@ -31,23 +32,18 @@ export function getMonthWeeks(
   }
 ): MonthWeek[] {
   const weeksInMonth: MonthWeek[] = daysToMonthWeeks(
-    startOfMonth(month),
-    endOfMonth(month),
-    options
+    dayjs(month).startOf('month'), //startOfMonth(month),
+    dayjs(month).endOf('month') //startOfMonth(month),
   );
 
   if (options?.useFixedWeeks) {
     // Add extra weeks to the month, up to 6 weeks
-    const nrOfMonthWeeks = getWeeksInMonth(month, options);
+    const nrOfMonthWeeks = getWeeksInMonth(dayjs(month));
     if (nrOfMonthWeeks < 6) {
       const lastWeek = weeksInMonth[weeksInMonth.length - 1];
       const lastDate = lastWeek.dates[lastWeek.dates.length - 1];
-      const toDate = addWeeks(lastDate, 6 - nrOfMonthWeeks);
-      const extraWeeks = daysToMonthWeeks(
-        addWeeks(lastDate, 1),
-        toDate,
-        options
-      );
+      const toDate = lastDate.add(6 - nrOfMonthWeeks, 'week');
+      const extraWeeks = daysToMonthWeeks(lastDate.add(1, 'week'), toDate);
       weeksInMonth.push(...extraWeeks);
     }
   }

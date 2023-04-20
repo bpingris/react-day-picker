@@ -1,4 +1,5 @@
 import { differenceInCalendarDays, isAfter, isDate, isSameDay } from 'date-fns';
+import dayjs from 'dayjs';
 
 import {
   isDateAfterType,
@@ -12,7 +13,7 @@ import {
 import { isDateInRange } from './isDateInRange';
 
 /** Returns true if `value` is a Date type. */
-function isDateType(value: unknown): value is Date {
+function isDateType(value: unknown): value is dayjs.Dayjs {
   return isDate(value);
 }
 
@@ -38,11 +39,16 @@ function isArrayOfDates(value: unknown): value is Date[] {
  * const isMatch(day, [matcher1, matcher2]); // true, since day is in the matcher1 range.
  * ```
  * */
-export function isMatch(day: Date, matchers: Matcher[]): boolean {
+export function isMatch(day: dayjs.Dayjs, matchers: Matcher[]): boolean {
   return matchers.some((matcher: Matcher) => {
     if (typeof matcher === 'boolean') {
       return matcher;
     }
+
+    if (dayjs.isDayjs(matcher)) {
+      return day.isSame(matcher);
+    }
+
     if (isDateType(matcher)) {
       return isSameDay(day, matcher);
     }

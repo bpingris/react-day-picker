@@ -28,6 +28,7 @@ import {
   ModifiersStyles
 } from './Modifiers';
 import { ClassNames, StyledComponent, Styles } from './Styles';
+import dayjs from 'dayjs';
 
 /**
  * Selection modes supported by DayPicker.
@@ -87,14 +88,14 @@ export interface DayPickerBase {
    *
    * @defaultValue The current month
    */
-  defaultMonth?: Date;
+  defaultMonth?: dayjs.Dayjs;
   /**
    * The month displayed in the calendar.
    *
    * As opposed to {@link DayPickerBase.defaultMonth}, use this prop with
    * {@link DayPickerBase.onMonthChange} to change the month programmatically.
    */
-  month?: Date;
+  month?: dayjs.Dayjs;
   /**
    * Event fired when the user navigates between months.
    */
@@ -108,19 +109,19 @@ export interface DayPickerBase {
   /**
    * The earliest day to start the month navigation.
    */
-  fromDate?: Date;
+  fromDate?: dayjs.Dayjs;
   /**
    * The latest day to end the month navigation.
    */
-  toDate?: Date;
+  toDate?: dayjs.Dayjs;
   /**
    * The earliest month to start the month navigation.
    */
-  fromMonth?: Date;
+  fromMonth?: dayjs.Dayjs;
   /**
    * The latest month to end the month navigation.
    */
-  toMonth?: Date;
+  toMonth?: dayjs.Dayjs;
   /**
    * The earliest year to start the month navigation.
    */
@@ -247,7 +248,7 @@ export interface DayPickerBase {
    * The today’s date. Default is the current date. This Date will get the
    * `today` modifier to style the day.
    */
-  today?: Date;
+  today?: dayjs.Dayjs;
   /**
    * Add modifiers to the matching days.
    */

@@ -1,6 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-import { isSameDay } from 'date-fns';
+// import { isSameDay } from 'date-fns';
+import dayjs from 'dayjs';
 
 import { useDayPicker } from 'contexts/DayPicker';
 
@@ -91,7 +92,7 @@ export function FocusProvider(props: { children: ReactNode }): JSX.Element {
       context,
       modifiers
     });
-    if (isSameDay(focusedDay, nextFocused)) return undefined;
+    if (dayjs(focusedDay).isSame(nextFocused)) return undefined;
     navigation.goToDate(nextFocused, focusedDay);
     focus(nextFocused);
   };

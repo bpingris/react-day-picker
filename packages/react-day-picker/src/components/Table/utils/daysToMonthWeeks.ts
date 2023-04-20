@@ -1,46 +1,26 @@
-import {
-  addDays,
-  differenceInCalendarDays,
-  endOfISOWeek,
-  endOfWeek,
-  getISOWeek,
-  getWeek,
-  Locale,
-  startOfISOWeek,
-  startOfWeek
-} from 'date-fns';
+import dayjs from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear';
+dayjs.extend(weekOfYear);
 
 import { MonthWeek } from './getMonthWeeks';
 
 /** Return the weeks between two dates.  */
 export function daysToMonthWeeks(
-  fromDate: Date,
-  toDate: Date,
-  options?: {
-    ISOWeek?: boolean;
-    locale?: Locale;
-    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-    firstWeekContainsDate?: 1 | 2 | 3 | 4 | 5 | 6 | 7;
-  }
+  fromDate: dayjs.Dayjs,
+  toDate: dayjs.Dayjs
 ): MonthWeek[] {
-  const toWeek = options?.ISOWeek
-    ? endOfISOWeek(toDate)
-    : endOfWeek(toDate, options);
-  const fromWeek = options?.ISOWeek
-    ? startOfISOWeek(fromDate)
-    : startOfWeek(fromDate, options);
+  const toWeek = fromDate.endOf('week');
+  const fromWeek = toDate.startOf('week');
 
-  const nOfDays = differenceInCalendarDays(toWeek, fromWeek);
-  const days: Date[] = [];
+  const nOfDays = toWeek.diff(fromWeek, 'day');
+  const days: dayjs.Dayjs[] = [];
 
   for (let i = 0; i <= nOfDays; i++) {
-    days.push(addDays(fromWeek, i));
+    days.push(fromWeek.add(i, 'day'));
   }
 
   const weeksInMonth = days.reduce((result: MonthWeek[], date) => {
-    const weekNumber = options?.ISOWeek
-      ? getISOWeek(date)
-      : getWeek(date, options);
+    const weekNumber = date.week();
 
     const existingWeek = result.find(
       (value) => value.weekNumber === weekNumber

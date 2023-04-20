@@ -1,4 +1,5 @@
 import { addMonths, differenceInCalendarMonths, startOfMonth } from 'date-fns';
+import dayjs from 'dayjs';
 
 /**
  * Returns the next month the user can navigate to according to the given
@@ -11,33 +12,33 @@ import { addMonths, differenceInCalendarMonths, startOfMonth } from 'date-fns';
  *
  */
 export function getNextMonth(
-  startingMonth: Date,
+  startingMonth: dayjs.Dayjs,
   options: {
     numberOfMonths?: number;
-    fromDate?: Date;
-    toDate?: Date;
+    fromDate?: dayjs.Dayjs;
+    toDate?: dayjs.Dayjs;
     pagedNavigation?: boolean;
-    today?: Date;
+    today?: dayjs.Dayjs;
     disableNavigation?: boolean;
   }
-): Date | undefined {
+): dayjs.Dayjs | undefined {
   if (options.disableNavigation) {
     return undefined;
   }
   const { toDate, pagedNavigation, numberOfMonths = 1 } = options;
   const offset = pagedNavigation ? numberOfMonths : 1;
-  const month = startOfMonth(startingMonth);
+  const month = startingMonth.startOf('month');
 
   if (!toDate) {
-    return addMonths(month, offset);
+    return dayjs(month).add(offset, 'month');
   }
 
-  const monthsDiff = differenceInCalendarMonths(toDate, startingMonth);
+  const monthsDiff = toDate.diff(startingMonth, 'month');
 
   if (monthsDiff < numberOfMonths) {
     return undefined;
   }
 
   // Jump forward as the number of months when paged navigation
-  return addMonths(month, offset);
+  return month.add(offset, 'month');
 }

@@ -1,4 +1,4 @@
-import { addMonths, differenceInCalendarMonths, startOfMonth } from 'date-fns';
+import dayjs from 'dayjs';
 
 /**
  * Returns the next previous the user can navigate to, according to the given
@@ -12,31 +12,29 @@ import { addMonths, differenceInCalendarMonths, startOfMonth } from 'date-fns';
  *
  */
 export function getPreviousMonth(
-  startingMonth: Date,
+  startingMonth: dayjs.Dayjs,
   options: {
     numberOfMonths?: number;
-    fromDate?: Date;
-    toDate?: Date;
+    fromDate?: dayjs.Dayjs;
     pagedNavigation?: boolean;
-    today?: Date;
     disableNavigation?: boolean;
   }
-): Date | undefined {
+): dayjs.Dayjs | undefined {
   if (options.disableNavigation) {
     return undefined;
   }
   const { fromDate, pagedNavigation, numberOfMonths = 1 } = options;
   const offset = pagedNavigation ? numberOfMonths : 1;
-  const month = startOfMonth(startingMonth);
+  const month = startingMonth.startOf('month');
   if (!fromDate) {
-    return addMonths(month, -offset);
+    return month.subtract(offset, 'month');
   }
-  const monthsDiff = differenceInCalendarMonths(month, fromDate);
+  const monthsDiff = month.diff(fromDate, 'month');
 
   if (monthsDiff <= 0) {
     return undefined;
   }
 
   // Jump back as the number of months when paged navigation
-  return addMonths(month, -offset);
+  return month.subtract(offset, 'month');
 }
